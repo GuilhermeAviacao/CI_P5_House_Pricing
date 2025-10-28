@@ -64,6 +64,12 @@ def data_inspection(df):
 
 def sale_price_distribution(df):
     """Show SalePrice distribution - copied from notebook 02"""
+    st.write(
+            "Price distribution skewed to the left, with a median lower "
+            "than the mean. Long right tail with some outliers on the "
+            "higher end / luxury houses. Box-plot depicts that most homes"
+            "are around 100-200K.")
+    
     if 'SalePrice' in df.columns:
         fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
@@ -93,7 +99,7 @@ def sale_price_distribution(df):
 
 def correlation_study(df):
     """Correlation analysis - copied from notebook 03"""
-
+    
     # Missing values treatment - copied from notebook 03
     df_filled = df.copy()
     object_cols = df.columns[df.dtypes == 'object'].to_list()
@@ -200,6 +206,8 @@ def correlation_study(df):
 
 def parallel_plot(df_eda):
     """Creation of parallel plot - copied from notebook 03"""
+
+    st.write("Dynamic chart, hover over to see the relationship of variables")
 
     # Discretize SalePrice - copied from notebook 03
     price_map = [-np.inf, 50000, 100000, 150000, 200000, 250000, 300000,

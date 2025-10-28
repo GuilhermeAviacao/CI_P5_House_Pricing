@@ -170,6 +170,9 @@ def show_model_performance(df):
     # Model evaluation - copied from notebook 04
     st.write("#### Model Performance Metrics")
 
+    st.write(
+        "Both Train and Test R2 scores are above the 0.80 score target"
+        "proving the predictive quality of the model")
     # Train set evaluation
     st.write("**Train Set Performance:**")
     pred_train = best_regressor_pipeline.predict(X_train)
