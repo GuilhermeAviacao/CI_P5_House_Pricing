@@ -11,10 +11,10 @@ from app_pages.page5 import page5_body
 app = MultiPage(app_name="Housing Price Analysis")
 
 # Add your app pages here using .add_page()
-app.app_page("Page 1", page1_body)
-app.app_page("Page 2", page2_body)
-app.app_page("Page 3", page3_body)
-app.app_page("Page 4", page4_body)
-app.app_page("Page 5", page5_body)
+app.app_page("Page 1: Project Summary", page1_body)
+app.app_page("Page 2: Data Exploration Study", page2_body)
+app.app_page("Page 3: ML Model Description", page3_body)
+app.app_page("Page 4: Inherited Houses Appraisal", page4_body)
+app.app_page("Page 5: Generalized Predictor", page5_body)
 
 app.run()

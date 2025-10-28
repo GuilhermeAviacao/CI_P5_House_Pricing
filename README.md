@@ -250,7 +250,7 @@ The dashboard is implemented using Streamlit and consists of 5 pages:
 
 ---
 
-### Page 5: Custom Price Predictor
+### Page 5: Generalized Price Predictor
 **Purpose:** Answer Business Requirement 2 - predict price for any house in Ames, Iowa
 
 **Content:**

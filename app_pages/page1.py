@@ -4,7 +4,7 @@ import streamlit as st
 
 
 def page1_body():
-    st.write("Quick Project Summary")
+    st.write("Project Summary")
 
     st.info("""
     **Situation:** \n
