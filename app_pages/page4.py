@@ -9,13 +9,13 @@ import matplotlib.pyplot as plt
 def page4_body():
     """
     House Price Prediction Page
-    
     """
 
     st.write("### House Price Predictor")
 
     st.info(
-        "**Price Forecasts** Usage of the forecast model to predict the inheritance house values"
+        "**Price Forecasts** Usage of the forecast model to predict the \
+            inheritance house values"
     )
 
     # Section 1: Predict Inherited Houses
@@ -28,13 +28,14 @@ def page4_body():
     st.write("**The 4 Inherited Houses:**")
     st.dataframe(inherited_houses)
     st.write("---")
-    
+
     if st.checkbox("Predict Prices for Inherited Houses"):
         predictions = make_predictions(inherited_houses)
 
         if predictions is not None:
             # Load dataset to get median and mean
-            df = pd.read_csv("outputs/datasets/collection/HouseFeaturesPrices.csv")
+            df = pd.\
+                read_csv("outputs/datasets/collection/HouseFeaturesPrices.csv")
             median_price = df['SalePrice'].median()
             mean_price = df['SalePrice'].mean()
 
@@ -94,9 +95,11 @@ def page4_body():
                 st.write("")
 
             # Display total appraisal in green success box
-            st.success(f"The four houses appraisal prediction is **${predictions.sum():,.0f}**")
+            st.success(f"The four houses appraisal prediction is **${\
+                                                predictions.sum():,.0f}**")
 
             st.write("---")
+
 
 def plot_price_distribution(predictions):
 
@@ -128,7 +131,8 @@ def plot_price_distribution(predictions):
 
     ax.set_xlabel('Sale Price ($)', fontsize=12)
     ax.set_ylabel('Frequency', fontsize=12)
-    ax.set_title('Inherited Houses vs Market Price Distribution', fontsize=14, fontweight='bold')
+    ax.set_title('Inherited Houses vs Market Price Distribution',
+                 fontsize=14, fontweight='bold')
     ax.legend(loc='upper right')
     ax.grid(True, alpha=0.3)
 
@@ -146,10 +150,12 @@ def make_predictions(input_df):
         with open(model_path, 'rb') as file:
             pipeline = pickle.load(file)
 
-        # Load training data to get the expected column order and values for missing data
-        training_df = pd.read_csv("outputs/datasets/collection/HouseFeaturesPrices.csv")
+        # Load training data to get the expected column order
+        # and values for missing data
+        training_df = pd.\
+            read_csv("outputs/datasets/collection/HouseFeaturesPrices.csv")
         # Removal of target variable
-        training_df = training_df.drop(['SalePrice'], axis=1)  
+        training_df = training_df.drop(['SalePrice'], axis=1)
 
         # Make a copy of input data
         input_df_clean = input_df.copy()
@@ -157,7 +163,8 @@ def make_predictions(input_df):
         # Ensure all training columns are present in input data
         for col in training_df.columns:
             if col not in input_df_clean.columns:
-                st.warning(f"Column '{col}' missing from input data. Adding with median/mode value.")
+                st.warning(f"Column '{col}' missing from input data. \
+                                            Adding with median/mode value.")
                 if training_df[col].dtype == 'object':
                     input_df_clean[col] = training_df[col].mode()[0]
                 else:
@@ -174,7 +181,8 @@ def make_predictions(input_df):
         # Fill missing numerical values with training data median
         for col in input_df_clean.select_dtypes(include=[np.number]).columns:
             if input_df_clean[col].isnull().any():
-                input_df_clean[col] = input_df_clean[col].fillna(training_df[col].median())
+                input_df_clean[col] = input_df_clean[col].fillna(
+                                                    training_df[col].median())
 
         # Make predictions
         predictions = pipeline.predict(input_df_clean)

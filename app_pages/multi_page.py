@@ -11,9 +11,8 @@ class MultiPage:
         self.app_name = app_name
 
         st.set_page_config(
-        page_title="Housing Price Analysis",
-        page_icon="🏠"
-)
+            page_title="Housing Price Analysis",
+            page_icon="🏠")
 
     def app_page(self, title, func) -> None:
         """ Appends title"""

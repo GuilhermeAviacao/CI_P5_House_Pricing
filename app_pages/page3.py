@@ -61,7 +61,7 @@ def load_house_data():
 def handle_missing_values(df):
     """Missing values treatment - copied from notebook 04"""
     df_filled = df.copy()
-    object_cols = df.columns[df.dtypes=='object'].to_list()
+    object_cols = df.columns[df.dtypes == 'object'].to_list()
 
     # Fill missing values in object columns
     for col in object_cols:
@@ -83,7 +83,9 @@ def show_model_training_process(df):
 
     # Handle missing values
     df_filled = handle_missing_values(df)
-    st.write(f"**After handling missing values:** {df_filled.isnull().sum().sum()} missing values")
+    st.write(f"** After handling missing values: ** {df_filled.
+                                                     isnull().sum().sum(
+                                                     )} missing values")
 
     # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(
@@ -98,16 +100,21 @@ def show_model_training_process(df):
 
     st.write("#### Model Selection Results")
     st.write(
-        "Several regression algorithms were evaluated using Grid Search CV with default hyperparameters. "
-        "The models were compared based on R2 score with 5-fold cross-validation."
+        "Several regression algorithms were evaluated using Grid Search "
+        "CV with default hyperparameters. "
+        "The models were compared based on R2 score with 5-fold """
+        "cross-validation."
     )
 
     # Quick search results - copied from notebook 04
     quick_search_results = {
-        'estimator': ['ExtraTreesRegressor', 'RandomForestRegressor', 'LinearRegression',
-                     'GradientBoostingRegressor', 'AdaBoostRegressor', 'XGBRegressor',
-                     'DecisionTreeRegressor'],
-        'mean_score': [0.801154, 0.797278, 0.789251, 0.756799, 0.740974, 0.711484, 0.600532]
+        'estimator': ['ExtraTreesRegressor', 'RandomForestRegressor',
+                      'LinearRegression',
+                      'GradientBoostingRegressor', 'AdaBoostRegressor',
+                      'XGBRegressor',
+                      'DecisionTreeRegressor'],
+        'mean_score': [0.801154, 0.797278, 0.789251, 0.756799, 0.740974,
+                       0.711484, 0.600532]
     }
     df_quick_search = pd.DataFrame(quick_search_results)
 
@@ -120,14 +127,16 @@ def show_model_training_process(df):
 
     st.write("#### Hyperparameter Optimization")
     st.write(
-        "The ExtraTreesRegressor was further optimized by testing different hyperparameter combinations."
+        "The ExtraTreesRegressor was further optimized by testing different \
+            hyperparameter combinations."
     )
 
     # Hyperparameter search results - copied from notebook 04
     hyperparam_results = {
         'n_estimators': [300, 100, 300, 100, 100, 300],
         'max_depth': [10, 10, None, None, 3, 3],
-        'mean_score': [0.807148, 0.806978, 0.804857, 0.801154, 0.728399, 0.727763]
+        'mean_score': [0.807148, 0.806978, 0.804857, 0.801154, 0.728399,
+                       0.727763]
     }
     df_hyperparam = pd.DataFrame(hyperparam_results)
 
@@ -135,7 +144,8 @@ def show_model_training_process(df):
     st.dataframe(df_hyperparam)
 
     st.write(
-        "**Best Hyperparameters:** n_estimators=300, max_depth=10, criterion='squared_error'"
+        "**Best Hyperparameters:** n_estimators=300, max_depth=10, \
+            criterion='squared_error'"
     )
 
 
@@ -163,25 +173,35 @@ def show_model_performance(df):
     # Train set evaluation
     st.write("**Train Set Performance:**")
     pred_train = best_regressor_pipeline.predict(X_train)
-    st.write(f"R2 Score: {r2_score(y_train, pred_train):.3f}")
-    st.write(f"Mean Absolute Error: {mean_absolute_error(y_train, pred_train):,.3f}")
-    st.write(f"Mean Squared Error: {mean_squared_error(y_train, pred_train):,.3f}")
-    st.write(f"Root Mean Squared Error: {np.sqrt(mean_squared_error(y_train, pred_train)):,.3f}")
+    st.write(f"R2 Score: \
+    {r2_score(y_train, pred_train):.3f}")
+    st.write(f"Mean Absolute Error: \
+    {mean_absolute_error(y_train,pred_train):,.3f}")
+    st.write(f"Mean Squared Error:\
+    {mean_squared_error(y_train, pred_train):,.3f} ")
+    st.write(f"Root Mean Squared Error:\
+    {np.sqrt(mean_squared_error(y_train, pred_train)):,.3f}")
 
     # Test set evaluation
     st.write("**Test Set Performance:**")
     pred_test = best_regressor_pipeline.predict(X_test)
-    st.write(f"R2 Score: {r2_score(y_test, pred_test):.3f}")
-    st.write(f"Mean Absolute Error: {mean_absolute_error(y_test, pred_test):,.3f}")
-    st.write(f"Mean Squared Error: {mean_squared_error(y_test, pred_test):,.3f}")
-    st.write(f"Root Mean Squared Error: {np.sqrt(mean_squared_error(y_test, pred_test)):,.3f}")
+    st.write(f"R2 Score: \
+    {r2_score(y_test, pred_test):.3f}")
+    st.write(f"Mean Absolute Error: \
+    {mean_absolute_error(y_test, pred_test):,.3f}")
+    st.write(f"Mean Squared Error: \
+    {mean_squared_error(y_test, pred_test):,.3f}")
+    st.write(f"Root Mean Squared Error: \
+    {np.sqrt(mean_squared_error(y_test, pred_test)):,.3f}")
 
     # Performance plots - copied from notebook 04
     st.write("#### Actual vs Predicted Plots")
-    regression_evaluation_plots(X_train, y_train, X_test, y_test, best_regressor_pipeline)
+    regression_evaluation_plots(X_train, y_train, X_test, y_test,
+                                best_regressor_pipeline)
 
 
-def regression_evaluation_plots(X_train, y_train, X_test, y_test, pipeline, alpha_scatter=0.5):
+def regression_evaluation_plots(X_train, y_train, X_test, y_test, pipeline,
+                                alpha_scatter=0.5):
     """Create actual vs predicted plots - copied from notebook 04"""
     pred_train = pipeline.predict(X_train)
     pred_test = pipeline.predict(X_test)
@@ -227,25 +247,31 @@ def show_feature_importance(df):
     # Feature importance - copied from notebook 04
     data_cleaning_feat_eng_steps = 2
 
-    columns_after_data_cleaning_feat_eng = (Pipeline(best_regressor_pipeline.steps[:data_cleaning_feat_eng_steps])
-                                            .transform(X_train)
-                                            .columns)
+    columns_after_data_cleaning_feat_eng = (Pipeline(best_regressor_pipeline.
+    steps[:data_cleaning_feat_eng_steps])
+    .transform(X_train)
+    .columns)
 
-    best_features = columns_after_data_cleaning_feat_eng[best_regressor_pipeline['feat_selection'].get_support()].to_list()
+    best_features = columns_after_data_cleaning_feat_eng[
+            best_regressor_pipeline['feat_selection'].get_support()].to_list()
 
     df_feature_importance = (pd.DataFrame(data={
-            'Feature': columns_after_data_cleaning_feat_eng[best_regressor_pipeline['feat_selection'].get_support()],
-            'Importance': best_regressor_pipeline['model'].feature_importances_})
+            'Feature': columns_after_data_cleaning_feat_eng[
+                best_regressor_pipeline['feat_selection'].get_support()],
+            'Importance': best_regressor_pipeline['model'].
+            feature_importances_})
         .sort_values(by='Importance', ascending=False)
     )
 
-    st.write(f"**These are the {len(best_features)} most important features in descending order.**")
+    st.write(f"**These are the {len(best_features)} most important \
+                                            features in descending order.**")
     st.dataframe(df_feature_importance)
 
     # Feature importance plot - copied from notebook 04
     st.write("#### Feature Importance Plot")
     fig, ax = plt.subplots(figsize=(10, 6))
-    df_feature_importance.plot(kind='bar', x='Feature', y='Importance', ax=ax, legend=False)
+    df_feature_importance.plot(kind='bar', x='Feature', y='Importance',
+                               ax=ax, legend=False)
     ax.set_xlabel("Feature")
     ax.set_ylabel("Importance")
     ax.set_title("Feature Importance - ExtraTreesRegressor")

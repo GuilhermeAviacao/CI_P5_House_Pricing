@@ -8,7 +8,7 @@ from feature_engine.encoding import OneHotEncoder
 from feature_engine.discretisation import ArbitraryDiscretiser
 
 
-#Data Load
+# Data Load
 def page2_body():
     """Page 2 - Data Exploration and Correlation Study"""
 
@@ -45,7 +45,9 @@ def load_house_data():
     df = pd.read_csv("outputs/datasets/collection/HouseFeaturesPrices.csv")
     return df
 
+
 def data_inspection(df):
+
     """Display dataset information - copied from notebook 01"""
     st.write(f"**Dataset Shape:** {df.shape[0]} rows, {df.shape[1]} columns")
 
@@ -58,6 +60,7 @@ def data_inspection(df):
     st.write("**Dataset Information:**")
     st.text(f"Total entries: {df.shape[0]}")
     st.text(f"Total features: {df.shape[1]}")
+
 
 def sale_price_distribution(df):
     """Show SalePrice distribution - copied from notebook 02"""
@@ -86,14 +89,14 @@ def sale_price_distribution(df):
         st.write(f"Max: ${df['SalePrice'].max():,.2f}")
 
 
-#Correlation Study
+# Correlation Study
 
 def correlation_study(df):
     """Correlation analysis - copied from notebook 03"""
 
     # Missing values treatment - copied from notebook 03
     df_filled = df.copy()
-    object_cols = df.columns[df.dtypes=='object'].to_list()
+    object_cols = df.columns[df.dtypes == 'object'].to_list()
 
     # Fill missing values in object columns
     for col in object_cols:
@@ -105,24 +108,28 @@ def correlation_study(df):
         df_filled[col] = df_filled[col].fillna(df_filled[col].median())
 
     # Encoding categorical variables - copied from notebook 03
-    encoder = OneHotEncoder(variables=df_filled.columns[df_filled.dtypes=='object'].to_list(), drop_last=False)
+    encoder = OneHotEncoder(variables=df_filled.columns[
+        df_filled.dtypes == 'object'].to_list(), drop_last=False)
     df_ohe = encoder.fit_transform(df_filled)
 
     # Spearman correlation - copied from notebook 03
-    corr_spearman = df_ohe.corr(method='spearman')['SalePrice'].sort_values(key=abs, ascending=False)[1:].head(10)
+    corr_spearman = df_ohe.corr(method='spearman')['SalePrice'].sort_values(
+                                        key=abs, ascending=False)[1:].head(10)
 
     st.write("**Top 10 Spearman Correlations with SalePrice:**")
     st.dataframe(corr_spearman)
 
     # Pearson correlation - copied from notebook 03
-    corr_pearson = df_ohe.corr(method='pearson')['SalePrice'].sort_values(key=abs, ascending=False)[1:].head(10)
+    corr_pearson = df_ohe.corr(method='pearson')['SalePrice'].sort_values(
+                                        key=abs, ascending=False)[1:].head(10)
 
     st.write("**Top 10 Pearson Correlations with SalePrice:**")
     st.dataframe(corr_pearson)
 
     # Top features - copied from notebook 03
     top_n = 5
-    vars_to_study = list(set(corr_pearson[:top_n].index.to_list() + corr_spearman[:top_n].index.to_list()))
+    vars_to_study = list(set(corr_pearson[:top_n].index.to_list() +
+                             corr_spearman[:top_n].index.to_list()))
 
     st.write(f"**Top {len(vars_to_study)} Features to Study:**")
     st.write(vars_to_study)
@@ -145,20 +152,24 @@ def correlation_study(df):
                 linewidths=0.5,
                 cbar_kws={"shrink": .8})
 
-    plt.title('Correlation Heatmap - Top Selected House Features', fontsize=16, pad=20)
+    plt.title('Correlation Heatmap - Top Selected House Features',
+              fontsize=16, pad=20)
     plt.tight_layout()
     st.pyplot(plt.gcf())
 
     # Correlation bar chart - copied from notebook 03
     st.write("**Correlation with SalePrice - Bar Chart:**")
-    correlations_with_price = correlation_matrix['SalePrice'].drop('SalePrice').sort_values(ascending=False)
+    correlations_with_price = correlation_matrix['SalePrice'].drop(
+                                    'SalePrice').sort_values(ascending=False)
 
     plt.figure(figsize=(10, 6))
     bars = plt.bar(range(len(correlations_with_price)),
                    correlations_with_price.values,
-                   color=['darkgreen' if x > 0 else 'darkred' for x in correlations_with_price.values])
+                   color=['darkgreen' if x > 0 else 'darkred' for x
+                          in correlations_with_price.values])
 
-    plt.title('Correlation with SalePrice - Selected House Features', fontsize=16, pad=20)
+    plt.title('Correlation with SalePrice - Selected House Features',
+              fontsize=16, pad=20)
     plt.xlabel('House Features', fontsize=12)
     plt.ylabel('Correlation Coefficient', fontsize=12)
 
@@ -169,11 +180,11 @@ def correlation_study(df):
 
     for i, (feature, value) in enumerate(correlations_with_price.items()):
         plt.text(i, value + 0.01 if value > 0 else value - 0.03,
-                f'{value:.3f}',
-                ha='center',
-                va='bottom' if value > 0 else 'top',
-                fontweight='bold',
-                fontsize=10)
+                 f'{value:.3f}',
+                 ha='center',
+                 va='bottom' if value > 0 else 'top',
+                 fontweight='bold',
+                 fontsize=10)
 
     plt.axhline(y=0, color='black', linestyle='-', alpha=0.3)
     plt.grid(True, alpha=0.3, axis='y')
@@ -184,13 +195,15 @@ def correlation_study(df):
     if st.checkbox("Show Parallel Plot"):
         parallel_plot(df_eda)
 
-#Parallel Plot
+# Parallel Plot
+
 
 def parallel_plot(df_eda):
     """Creation of parallel plot - copied from notebook 03"""
 
     # Discretize SalePrice - copied from notebook 03
-    price_map = [-np.inf, 50000, 100000, 150000, 200000, 250000, 300000, 350000, np.inf]
+    price_map = [-np.inf, 50000, 100000, 150000, 200000, 250000, 300000,
+                 350000, np.inf]
     disc = ArbitraryDiscretiser(binning_dict={'SalePrice': price_map})
     df_parallel = disc.fit_transform(df_eda)
 
@@ -214,15 +227,20 @@ def parallel_plot(df_eda):
 
     # Categorize features - copied from notebook 03
     if '1stFlrSF' in df_plot.columns:
-        df_plot['1stFlrSF_cat'] = df_plot['1stFlrSF'].apply(categorize_1stflr)
+        df_plot['1stFlrSF_cat'] = df_plot['1stFlrSF'].apply(
+                                                            categorize_1stflr)
     if 'GarageArea' in df_plot.columns:
-        df_plot['GarageArea_cat'] = df_plot['GarageArea'].apply(categorize_garage)
+        df_plot['GarageArea_cat'] = df_plot['GarageArea'].apply(
+                                                            categorize_garage)
     if 'GrLivArea' in df_plot.columns:
-        df_plot['GrLivArea_cat'] = df_plot['GrLivArea'].apply(categorize_living)
+        df_plot['GrLivArea_cat'] = df_plot['GrLivArea'].apply(
+                                                            categorize_living)
     if 'TotalBsmtSF' in df_plot.columns:
-        df_plot['TotalBsmtSF_cat'] = df_plot['TotalBsmtSF'].apply(categorize_basement)
+        df_plot['TotalBsmtSF_cat'] = df_plot['TotalBsmtSF'].apply(
+                                                          categorize_basement)
     if 'OverallQual' in df_plot.columns:
-        df_plot['OverallQual_cat'] = df_plot['OverallQual'].apply(categorize_quality)
+        df_plot['OverallQual_cat'] = df_plot['OverallQual'].apply(
+                                                            categorize_quality)
     if 'YearBuilt' in df_plot.columns:
         df_plot['YearBuilt_cat'] = df_plot['YearBuilt'].apply(categorize_year)
 
@@ -242,15 +260,17 @@ def parallel_plot(df_eda):
 
     # Plot order - copied from notebook 03
     categorical_columns = ['OverallQual_cat', 'YearBuilt_cat', 'GrLivArea_cat',
-                          '1stFlrSF_cat', 'GarageArea_cat', 'TotalBsmtSF_cat']
+                           '1stFlrSF_cat', 'GarageArea_cat', 'TotalBsmtSF_cat']
 
     fig = px.parallel_categories(df_plot,
-                               dimensions=categorical_columns,
-                               color='SalePrice_numeric',
-                               color_continuous_scale='viridis',
-                               title="Housing Top Features - Colored by Sale Price",
-                               labels={col: col.replace('_cat', '').replace('SF', ' (sq ft)')
-                                      for col in categorical_columns})
+                                 dimensions=categorical_columns,
+                                 color='SalePrice_numeric',
+                                 color_continuous_scale='viridis',
+                                 title="Housing Top Features - "
+                                       "Colored by Sale Price",
+                                 labels={col: col.replace('_cat', '').replace(
+                                                            'SF', ' (sq ft)')
+                                         for col in categorical_columns})
 
     fig.update_layout(
         font_size=10,

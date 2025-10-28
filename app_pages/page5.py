@@ -11,7 +11,7 @@ def page5_body():
     st.write("### Predict Price for any House in Ames, Iowa")
 
     st.info(
-        "**Custom Price Prediction:** Our model finds that the five most " 
+        "**Custom Price Prediction:** Our model finds that the five most "
         "important features are sufficient to predict the house sale price:"
     )
 
@@ -95,7 +95,8 @@ def get_house_inputs():
     remaining_features = [
         '1stFlrSF', '2ndFlrSF', 'BedroomAbvGr', 'BsmtFinSF1', 'BsmtUnfSF',
         'EnclosedPorch', 'GarageYrBlt', 'LotArea', 'LotFrontage',
-        'MasVnrArea', 'OpenPorchSF', 'OverallCond', 'WoodDeckSF', 'YearRemodAdd'
+        'MasVnrArea', 'OpenPorchSF', 'OverallCond', 'WoodDeckSF',
+        'YearRemodAdd'
     ]
 
     for feature in remaining_features:
@@ -103,7 +104,8 @@ def get_house_inputs():
             house_data[feature] = df[feature].median()
 
     # Add categorical features with most common values
-    categorical_features = ['BsmtExposure', 'BsmtFinType1', 'GarageFinish', 'KitchenQual']
+    categorical_features = ['BsmtExposure', 'BsmtFinType1', 'GarageFinish',
+                            'KitchenQual']
 
     for feature in categorical_features:
         if feature in df.columns:
@@ -140,7 +142,8 @@ def plot_single_house_distribution(predicted_price):
 
     ax.set_xlabel('Sale Price ($)', fontsize=12)
     ax.set_ylabel('Frequency', fontsize=12)
-    ax.set_title('Predicted House vs Market Price Distribution', fontsize=14, fontweight='bold')
+    ax.set_title('Predicted House vs Market Price Distribution', fontsize=14,
+                 fontweight='bold')
     ax.legend(loc='upper right')
     ax.grid(True, alpha=0.3)
 
@@ -164,7 +167,8 @@ def plot_single_house_distribution(predicted_price):
 
     # Show percentile
     percentile = (df['SalePrice'] < predicted_price).mean() * 100
-    st.info(f"This house is priced higher than **{percentile:.1f}%** of houses in the dataset.")
+    st.info(f"This house is priced higher than **{percentile:.1f}%** "
+            "of houses in the dataset.")
 
 
 def make_predictions(input_df):
@@ -177,9 +181,10 @@ def make_predictions(input_df):
         with open(model_path, 'rb') as file:
             pipeline = pickle.load(file)
 
-        # Load training data to get the expected column order and values for missing data
-        training_df = pd.read_csv("outputs/datasets/collection/HouseFeaturesPrices.csv")
-        training_df = training_df.drop(['SalePrice'], axis=1)  # Remove target variable
+        # Load training to get the expected col order and vals for missing data
+        training_df = pd.read_csv(
+            "outputs/datasets/collection/HouseFeaturesPrices.csv")
+        training_df = training_df.drop(['SalePrice'], axis=1)
 
         # Make a copy of input data
         input_df_clean = input_df.copy()
@@ -187,7 +192,8 @@ def make_predictions(input_df):
         # Ensure all training columns are present in input data
         for col in training_df.columns:
             if col not in input_df_clean.columns:
-                st.warning(f"Column '{col}' missing from input data. Adding with median/mode value.")
+                st.warning(f"Column '{col}' missing from input data."
+                           "Adding with median/mode value.")
                 if training_df[col].dtype == 'object':
                     input_df_clean[col] = training_df[col].mode()[0]
                 else:
@@ -204,7 +210,8 @@ def make_predictions(input_df):
         # Fill missing numerical values with training data median
         for col in input_df_clean.select_dtypes(include=[np.number]).columns:
             if input_df_clean[col].isnull().any():
-                input_df_clean[col] = input_df_clean[col].fillna(training_df[col].median())
+                input_df_clean[col] = input_df_clean[col].fillna(
+                                                    training_df[col].median())
 
         # Make predictions
         predictions = pipeline.predict(input_df_clean)
